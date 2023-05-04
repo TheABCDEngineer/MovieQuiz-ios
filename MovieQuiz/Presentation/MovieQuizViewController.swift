@@ -12,6 +12,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet weak private var questionIndexView: UILabel!
     @IBOutlet weak private var questionView: UILabel!
     @IBOutlet weak private var imageView: UIImageView!
+    @IBOutlet weak private var buttonYesView: UIButton!
+    @IBOutlet weak private var buttonNoView: UIButton!
     
     private func generateQuestionList() -> [quizQuestion] {
         let questionsList: [quizQuestion] = [
@@ -96,6 +98,7 @@ final class MovieQuizViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.updateQuizQuestion()
+            self.enableButtons(true)
         }
     }
     
@@ -122,6 +125,11 @@ final class MovieQuizViewController: UIViewController {
         updateQuizQuestion()
     }
     
+    private func enableButtons(_ isEnabled: Bool) {
+        buttonYesView.isEnabled = isEnabled
+        buttonNoView.isEnabled = isEnabled
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         questions = generateQuestionList()
@@ -129,9 +137,11 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func onNoButtonClick() {
+        enableButtons(false)
         handleUserResponse(.no)
     }
     @IBAction private func onYesButtonClick() {
+        enableButtons(false)
         handleUserResponse(.yes)
     }
 }

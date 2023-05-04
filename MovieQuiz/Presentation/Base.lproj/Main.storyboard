@@ -128,6 +128,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="buttonNoView" destination="Fak-fy-u0J" id="x7h-0T-beu"/>
+                        <outlet property="buttonYesView" destination="R0f-jw-KNz" id="RxN-hB-PnJ"/>
                         <outlet property="imageView" destination="qMZ-AB-0vd" id="dep-aQ-1Kt"/>
                         <outlet property="questionIndexView" destination="taI-rY-bP1" id="Tc2-df-qY1"/>
                         <outlet property="questionView" destination="U4A-hD-XvT" id="e4J-rC-GXl"/>
