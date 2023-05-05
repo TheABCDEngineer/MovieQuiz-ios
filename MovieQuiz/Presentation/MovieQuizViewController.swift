@@ -5,7 +5,7 @@ final class MovieQuizViewController: UIViewController {
     private var questionCounter = 1
     private var correctQuestionsCounter = 0
     private var currentQuestionIndex = 0
-    private var questions = [quizQuestion]()
+    private var questions = [QuizQuestion]()
     private var alreadyUsedQuestions = [Int]()
     private var questionMovieRank = 0
     
@@ -15,18 +15,24 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet weak private var buttonYesView: UIButton!
     @IBOutlet weak private var buttonNoView: UIButton!
     
-    private func generateQuestionList() -> [quizQuestion] {
-        let questionsList: [quizQuestion] = [
-            quizQuestion (imageTitle: "The Godfather", movieRank: 9.2),
-            quizQuestion (imageTitle: "The Dark Knight", movieRank: 9.0),
-            quizQuestion (imageTitle: "Kill Bill", movieRank: 8.1),
-            quizQuestion (imageTitle: "The Avengers", movieRank: 8.0),
-            quizQuestion (imageTitle: "Deadpool", movieRank: 8.0),
-            quizQuestion (imageTitle: "The Green Knight", movieRank: 6.6),
-            quizQuestion (imageTitle: "Old", movieRank: 5.8),
-            quizQuestion (imageTitle: "The Ice Age Adventures of Buck Wild", movieRank: 4.3),
-            quizQuestion (imageTitle: "Tesla", movieRank: 5.1),
-            quizQuestion (imageTitle: "Vivarium", movieRank: 5.8),
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        questions = generateQuestionList()
+        restartQuiz()
+    }
+    
+    private func generateQuestionList() -> [QuizQuestion] {
+        let questionsList: [QuizQuestion] = [
+            QuizQuestion (imageTitle: "The Godfather", movieRank: 9.2),
+            QuizQuestion (imageTitle: "The Dark Knight", movieRank: 9.0),
+            QuizQuestion (imageTitle: "Kill Bill", movieRank: 8.1),
+            QuizQuestion (imageTitle: "The Avengers", movieRank: 8.0),
+            QuizQuestion (imageTitle: "Deadpool", movieRank: 8.0),
+            QuizQuestion (imageTitle: "The Green Knight", movieRank: 6.6),
+            QuizQuestion (imageTitle: "Old", movieRank: 5.8),
+            QuizQuestion (imageTitle: "The Ice Age Adventures of Buck Wild", movieRank: 4.3),
+            QuizQuestion (imageTitle: "Tesla", movieRank: 5.1),
+            QuizQuestion (imageTitle: "Vivarium", movieRank: 5.8),
         ]
         return questionsList
     }
@@ -58,7 +64,7 @@ final class MovieQuizViewController: UIViewController {
         currentQuestionIndex = getNextQuestionIndex(questions.count)
         questionMovieRank = Int.random(in: 5..<10)
         
-        let questionViewModel = questionViewModel(
+        let questionViewModel = QuestionViewModel(
             counter: questionCounter,
             questionCount: questions.count,
             image: UIImage(named: questions[currentQuestionIndex].imageTitle) ?? UIImage(),
@@ -67,28 +73,28 @@ final class MovieQuizViewController: UIViewController {
         showQuestion(questionViewModel)
     }
     
-    private func showQuestion(_ model: questionViewModel) {
-        showImageBorder(imageBorderState.noBorders)
+    private func showQuestion(_ model: QuestionViewModel) {
+        showImageBorder(ImageBorderState.noBorders)
         questionIndexView.text = String(model.counter) + "/" + String(model.questionCount)
         imageView.image = model.image
         questionView.text = "Рейтинг этого фильма больше чем " + String(model.movieRank) + "?"
     }
     
-    private func showImageBorder(_ state: imageBorderState) {
+    private func showImageBorder(_ state: ImageBorderState) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = state.values.width
         imageView.layer.borderColor = state.values.colour
     }
     
-    private func handleUserResponse(_ userResponse: response) {
-        var correctResponse: response = .no
+    private func handleUserResponse(_ userResponse: Response) {
+        var correctResponse: Response = .no
         if questions[currentQuestionIndex].movieRank > Float(questionMovieRank) {
             correctResponse = .yes
         }
         
-        var borderState = imageBorderState.incorrectUserResponse
+        var borderState = ImageBorderState.incorrectUserResponse
         if userResponse == correctResponse {
-            borderState = imageBorderState.correctUserResponse
+            borderState = ImageBorderState.correctUserResponse
             correctQuestionsCounter += 1
         }
         
@@ -130,12 +136,6 @@ final class MovieQuizViewController: UIViewController {
         buttonNoView.isEnabled = isEnabled
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        questions = generateQuestionList()
-        restartQuiz()
-    }
-    
     @IBAction private func onNoButtonClick() {
         enableButtons(false)
         handleUserResponse(.no)
@@ -143,35 +143,5 @@ final class MovieQuizViewController: UIViewController {
     @IBAction private func onYesButtonClick() {
         enableButtons(false)
         handleUserResponse(.yes)
-    }
-}
-
-struct quizQuestion {
-    let imageTitle: String
-    let movieRank: Float
-}
-
-struct questionViewModel {
-    let counter: Int
-    let questionCount: Int
-    let image: UIImage
-    let movieRank: Int
-}
-
-enum response {
-    case yes, no
-}
-
-enum imageBorderState {
-    case noBorders
-    case correctUserResponse
-    case incorrectUserResponse
-    
-    var values: (width: CGFloat, colour: CGColor) {
-        switch self {
-        case .noBorders: return (0,UIColor.ypBackground.cgColor)
-        case .correctUserResponse: return (8, UIColor.ypGreen.cgColor)
-        case .incorrectUserResponse: return (8, UIColor.ypRed.cgColor)
-        }
     }
 }
