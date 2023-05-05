@@ -1,72 +1,147 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
-    // MARK: - Lifecycle
+    
+    private var questionCounter = 1
+    private var correctQuestionsCounter = 0
+    private var currentQuestionIndex = 0
+    private var questions = [QuizQuestion]()
+    private var alreadyUsedQuestions = [Int]()
+    private var questionMovieRank = 0
+    
+    @IBOutlet weak private var questionIndexView: UILabel!
+    @IBOutlet weak private var questionView: UILabel!
+    @IBOutlet weak private var imageView: UIImageView!
+    @IBOutlet weak private var buttonYesView: UIButton!
+    @IBOutlet weak private var buttonNoView: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        questions = generateQuestionList()
+        restartQuiz()
+    }
+    
+    private func generateQuestionList() -> [QuizQuestion] {
+        let questionsList: [QuizQuestion] = [
+            QuizQuestion (imageTitle: "The Godfather", movieRank: 9.2),
+            QuizQuestion (imageTitle: "The Dark Knight", movieRank: 9.0),
+            QuizQuestion (imageTitle: "Kill Bill", movieRank: 8.1),
+            QuizQuestion (imageTitle: "The Avengers", movieRank: 8.0),
+            QuizQuestion (imageTitle: "Deadpool", movieRank: 8.0),
+            QuizQuestion (imageTitle: "The Green Knight", movieRank: 6.6),
+            QuizQuestion (imageTitle: "Old", movieRank: 5.8),
+            QuizQuestion (imageTitle: "The Ice Age Adventures of Buck Wild", movieRank: 4.3),
+            QuizQuestion (imageTitle: "Tesla", movieRank: 5.1),
+            QuizQuestion (imageTitle: "Vivarium", movieRank: 5.8),
+        ]
+        return questionsList
+    }
+    
+    private func checkQuestionIsAlreadyUsed(_ questionIndex: Int) -> Bool {
+        for index in alreadyUsedQuestions {
+            if index == questionIndex {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func getNextQuestionIndex(_ questionCount: Int) -> Int {
+        var randomIndex = 0
+        repeat {
+            randomIndex = Int.random(in: 0..<questionCount)
+        } while
+        checkQuestionIsAlreadyUsed(randomIndex)
+        
+        return randomIndex
+    }
+    
+    private func updateQuizQuestion() {
+        if (questionCounter == questions.count + 1)  {
+            finishQuiz()
+            return
+        }
+        currentQuestionIndex = getNextQuestionIndex(questions.count)
+        questionMovieRank = Int.random(in: 5..<10)
+        
+        let questionViewModel = QuestionViewModel(
+            counter: questionCounter,
+            questionCount: questions.count,
+            image: UIImage(named: questions[currentQuestionIndex].imageTitle) ?? UIImage(),
+            movieRank: questionMovieRank
+        )
+        showQuestion(questionViewModel)
+    }
+    
+    private func showQuestion(_ model: QuestionViewModel) {
+        showImageBorder(ImageBorderState.noBorders)
+        questionIndexView.text = String(model.counter) + "/" + String(model.questionCount)
+        imageView.image = model.image
+        questionView.text = "Рейтинг этого фильма больше чем " + String(model.movieRank) + "?"
+    }
+    
+    private func showImageBorder(_ state: ImageBorderState) {
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = state.values.width
+        imageView.layer.borderColor = state.values.colour
+    }
+    
+    private func handleUserResponse(_ userResponse: Response) {
+        var correctResponse: Response = .no
+        if questions[currentQuestionIndex].movieRank > Float(questionMovieRank) {
+            correctResponse = .yes
+        }
+        
+        var borderState = ImageBorderState.incorrectUserResponse
+        if userResponse == correctResponse {
+            borderState = ImageBorderState.correctUserResponse
+            correctQuestionsCounter += 1
+        }
+        
+        showImageBorder(borderState)
+        questionCounter += 1
+        alreadyUsedQuestions.append(currentQuestionIndex)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.updateQuizQuestion()
+            self.enableButtons(true)
+        }
+    }
+    
+    private func finishQuiz() {
+        let message = "Ваш результат " + String(correctQuestionsCounter) + "/" + String(questions.count)
+        let alert = UIAlertController(
+            title: "Этот радунд окончен!",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { _ in
+            self.restartQuiz()
+        }
+        
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func restartQuiz() {
+        questionCounter = 1
+        correctQuestionsCounter = 0
+        alreadyUsedQuestions = []
+        updateQuizQuestion()
+    }
+    
+    private func enableButtons(_ isEnabled: Bool) {
+        buttonYesView.isEnabled = isEnabled
+        buttonNoView.isEnabled = isEnabled
+    }
+    
+    @IBAction private func onNoButtonClick() {
+        enableButtons(false)
+        handleUserResponse(.no)
+    }
+    @IBAction private func onYesButtonClick() {
+        enableButtons(false)
+        handleUserResponse(.yes)
     }
 }
-
-/*
- Mock-данные
- 
- 
- Картинка: The Godfather
- Настоящий рейтинг: 9,2
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: The Dark Knight
- Настоящий рейтинг: 9
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: Kill Bill
- Настоящий рейтинг: 8,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: The Avengers
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: Deadpool
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: The Green Knight
- Настоящий рейтинг: 6,6
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: Old
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-
-
- Картинка: The Ice Age Adventures of Buck Wild
- Настоящий рейтинг: 4,3
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-
-
- Картинка: Tesla
- Настоящий рейтинг: 5,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-
-
- Картинка: Vivarium
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- */
