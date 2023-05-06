@@ -110,6 +110,15 @@
 			path = Enums;
 			sourceTree = "<group>";
 		};
+		ABEA60752A0689A3003AED6B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				AB407BB82A04E318006D475A /* Model */,
+				AB407BB92A04E333006D475A /* Enums */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		AD1ABAA52831907B00B3E448 = {
 			isa = PBXGroup;
 			children = (
@@ -129,8 +138,7 @@
 		AD1ABAB02831907B00B3E448 /* MovieQuiz */ = {
 			isa = PBXGroup;
 			children = (
-				AB407BB92A04E333006D475A /* Enums */,
-				AB407BB82A04E318006D475A /* Model */,
+				ABEA60752A0689A3003AED6B /* Data */,
 				8F4738322848DE2A005DF65E /* Presentation */,
 				ADF0CF75283FDAA10075F54D /* Helpers */,
 				8F4738332848DE46005DF65E /* Resources */,
