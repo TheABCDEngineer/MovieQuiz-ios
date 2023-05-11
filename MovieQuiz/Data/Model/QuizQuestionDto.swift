@@ -1,6 +1,6 @@
 import Foundation
 
-struct QuizQuestion {
+struct QuizQuestionDto {
     let imageTitle: String
     let movieRank: Float
 }

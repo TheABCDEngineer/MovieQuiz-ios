@@ -2,10 +2,11 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     
+    private let questionsGenerator = QuizQuestionsGenerator()
     private var questionCounter = 1
     private var correctQuestionsCounter = 0
     private var currentQuestionIndex = 0
-    private var questions = [QuizQuestion]()
+    private var questions = [QuizQuestionDto]()
     private var alreadyUsedQuestions = [Int]()
     private var questionMovieRank = 0
     
@@ -17,26 +18,10 @@ final class MovieQuizViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        questions = generateQuestionList()
+        questions = questionsGenerator.generateQuestionList()
         restartQuiz()
     }
-    
-    private func generateQuestionList() -> [QuizQuestion] {
-        let questionsList: [QuizQuestion] = [
-            QuizQuestion (imageTitle: "The Godfather", movieRank: 9.2),
-            QuizQuestion (imageTitle: "The Dark Knight", movieRank: 9.0),
-            QuizQuestion (imageTitle: "Kill Bill", movieRank: 8.1),
-            QuizQuestion (imageTitle: "The Avengers", movieRank: 8.0),
-            QuizQuestion (imageTitle: "Deadpool", movieRank: 8.0),
-            QuizQuestion (imageTitle: "The Green Knight", movieRank: 6.6),
-            QuizQuestion (imageTitle: "Old", movieRank: 5.8),
-            QuizQuestion (imageTitle: "The Ice Age Adventures of Buck Wild", movieRank: 4.3),
-            QuizQuestion (imageTitle: "Tesla", movieRank: 5.1),
-            QuizQuestion (imageTitle: "Vivarium", movieRank: 5.8),
-        ]
-        return questionsList
-    }
-    
+  
     private func checkQuestionIsAlreadyUsed(_ questionIndex: Int) -> Bool {
         for index in alreadyUsedQuestions {
             if index == questionIndex {
