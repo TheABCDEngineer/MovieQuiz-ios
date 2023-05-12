@@ -1,68 +1,70 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
-    
-    private let questionsGenerator = QuizQuestionsGenerator()
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+    //MARK: - Properties
+    private let questionFactory: QuestionsFactoryProtocol = QuestionsFactoryImpl(
+        questionsGenerator: QuestionsGeneratorImpl()
+    )
+    private let statisticService: StatisticServiceProtocol = StatisticServiceImpl(
+        dataRepository: StatisticDataRepositoryImplUserDefaults()
+    )
     private var questionCounter = 1
-    private var correctQuestionsCounter = 0
-    private var currentQuestionIndex = 0
-    private var questions = [QuizQuestionDto]()
-    private var alreadyUsedQuestions = [Int]()
-    private var questionMovieRank = 0
-    
+    private var correctResponcesCounter = 0
+    private var correctResponse: Response = .yes
+  
     @IBOutlet weak private var questionIndexView: UILabel!
     @IBOutlet weak private var questionView: UILabel!
     @IBOutlet weak private var imageView: UIImageView!
     @IBOutlet weak private var buttonYesView: UIButton!
     @IBOutlet weak private var buttonNoView: UIButton!
     
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        questions = questionsGenerator.generateQuestionList()
+        questionFactory.addDelegate(delegate: self)
         restartQuiz()
     }
   
-    private func checkQuestionIsAlreadyUsed(_ questionIndex: Int) -> Bool {
-        for index in alreadyUsedQuestions {
-            if index == questionIndex {
-                return true
-            }
+    //MARK: - QuestionsFactoryDelegate
+    func onNewQuestionsGenerated() {
+        DispatchQueue.main.async { [weak self] in
+            self?.updateQuizQuestion()
         }
-        return false
     }
     
-    private func getNextQuestionIndex(_ questionCount: Int) -> Int {
-        var randomIndex = 0
-        repeat {
-            randomIndex = Int.random(in: 0..<questionCount)
-        } while
-        checkQuestionIsAlreadyUsed(randomIndex)
-        
-        return randomIndex
-    }
-    
+    //MARK: - Private functions
     private func updateQuizQuestion() {
-        if (questionCounter == questions.count + 1)  {
+        guard let question = questionFactory.getNextQuestion() else {
             finishQuiz()
             return
         }
-        currentQuestionIndex = getNextQuestionIndex(questions.count)
-        questionMovieRank = Int.random(in: 5..<10)
+        let questionMovieRank = Int.random(in: 5..<10)
         
-        let questionViewModel = QuestionViewModel(
-            counter: questionCounter,
-            questionCount: questions.count,
-            image: UIImage(named: questions[currentQuestionIndex].imageTitle) ?? UIImage(),
-            movieRank: questionMovieRank
+        correctResponse = getCorrectResponse(
+            trueMovieRank: question.movieRank,
+            questionMovieRank: questionMovieRank
         )
-        showQuestion(questionViewModel)
+        let questionScreenModel = ScreenModelsCreator.createQuestionScreenModel(
+            counter: questionCounter,
+            questionCount: questionFactory.getQuestionsCount(),
+            questionMovieRank: questionMovieRank,
+            questionImageUrl: question.imageUrl
+        )
+        showQuestion(questionScreenModel)
     }
     
-    private func showQuestion(_ model: QuestionViewModel) {
+    private func getCorrectResponse(trueMovieRank: Float, questionMovieRank: Int) -> Response {
+        if trueMovieRank > Float(questionMovieRank) {
+            return .yes
+        }
+        return .no
+    }
+    
+    private func showQuestion(_ model: QuestionScreenModel) {
         showImageBorder(ImageBorderState.noBorders)
-        questionIndexView.text = String(model.counter) + "/" + String(model.questionCount)
+        questionIndexView.text = model.counter
         imageView.image = model.image
-        questionView.text = "Рейтинг этого фильма больше чем " + String(model.movieRank) + "?"
+        questionView.text = model.question
     }
     
     private func showImageBorder(_ state: ImageBorderState) {
@@ -72,48 +74,46 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func handleUserResponse(_ userResponse: Response) {
-        var correctResponse: Response = .no
-        if questions[currentQuestionIndex].movieRank > Float(questionMovieRank) {
-            correctResponse = .yes
-        }
-        
+        enableButtons(false)
         var borderState = ImageBorderState.incorrectUserResponse
+        
         if userResponse == correctResponse {
             borderState = ImageBorderState.correctUserResponse
-            correctQuestionsCounter += 1
+            correctResponcesCounter += 1
         }
-        
         showImageBorder(borderState)
         questionCounter += 1
-        alreadyUsedQuestions.append(currentQuestionIndex)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+  
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.updateQuizQuestion()
             self.enableButtons(true)
         }
     }
     
     private func finishQuiz() {
-        let message = "Ваш результат " + String(correctQuestionsCounter) + "/" + String(questions.count)
-        let alert = UIAlertController(
-            title: "Этот радунд окончен!",
-            message: message,
-            preferredStyle: .alert
+        let statisticModel = statisticService.getStatistic(
+            currentGameCorrects: correctResponcesCounter,
+            currentGameQuestionAmount: questionFactory.getQuestionsCount()
         )
-        
-        let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { _ in
-            self.restartQuiz()
-        }
-        
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
+        let alertModel = ScreenModelsCreator.createAlertScreenModel(
+            correctResponcesCount: correctResponcesCounter,
+            questionsCount: questionFactory.getQuestionsCount(),
+            statistic: statisticModel,
+            completion: { [weak self] _ in
+                guard let self = self else {return}
+                self.restartQuiz()
+            }
+        )
+        AlertPresenter.showAlert(model: alertModel, controller: self)
     }
     
     private func restartQuiz() {
         questionCounter = 1
-        correctQuestionsCounter = 0
-        alreadyUsedQuestions = []
-        updateQuizQuestion()
+        correctResponcesCounter = 0
+        questionFactory.generateNewQuestions()
     }
     
     private func enableButtons(_ isEnabled: Bool) {
@@ -121,12 +121,11 @@ final class MovieQuizViewController: UIViewController {
         buttonNoView.isEnabled = isEnabled
     }
     
+    //MARK: - Actions
     @IBAction private func onNoButtonClick() {
-        enableButtons(false)
         handleUserResponse(.no)
     }
     @IBAction private func onYesButtonClick() {
-        enableButtons(false)
         handleUserResponse(.yes)
     }
 }
