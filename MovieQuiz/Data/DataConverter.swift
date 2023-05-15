@@ -1,13 +1,13 @@
 import Foundation
 class DataConverter {
-    class func convertQuestionDtoToModel(_ dto: QuestionDto) -> QuestionModel {
+    static func convertQuestionDtoToModel(_ dto: QuestionDto) -> QuestionModel {
         return QuestionModel(
             imageUrl: dto.imageTitle,
             movieRank: dto.movieRank
         )
     }
     
-    class func convertQuestionDtoToModel(_ arrayDto: [QuestionDto]) -> [QuestionModel] {
+    static func convertQuestionDtoToModel(_ arrayDto: [QuestionDto]) -> [QuestionModel] {
         var arrayQuestionModel = [QuestionModel]()
         
         for element in arrayDto {

@@ -1,7 +1,7 @@
 import UIKit
 class ScreenModelsCreator {
     
-    class func createQuestionScreenModel(
+    static func createQuestionScreenModel(
         counter: Int,
         questionCount: Int,
         questionMovieRank: Int,
@@ -15,7 +15,7 @@ class ScreenModelsCreator {
         )
     }
     
-    class func createAlertScreenModel(
+    static func createAlertScreenModel(
         correctResponcesCount: Int,
         questionsCount: Int,
         statistic: StatisticModel,

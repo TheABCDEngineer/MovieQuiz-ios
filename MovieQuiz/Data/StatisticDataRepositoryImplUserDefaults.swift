@@ -3,14 +3,6 @@ import Foundation
 class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
     private let userDefaults = UserDefaults.standard
     
-    private func saveJSONOnKey(codable: Codable, key: String) {
-        guard let data = try? JSONEncoder().encode(codable) else {
-            print("Невозможно сохранить результат")
-            return
-        }
-        userDefaults.set(data, forKey: key)
-    }
-    
     func saveQuizAmountEver(_ value: Int) {
         userDefaults.set(value, forKey: Key.quizAmountEver.rawValue)
     }
@@ -41,6 +33,14 @@ class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
             return .init(correctsEver: 0, questionsAmountEver: 0)
         }
         return record
+    }
+    
+    private func saveJSONOnKey(codable: Codable, key: String) {
+        guard let data = try? JSONEncoder().encode(codable) else {
+            print("Невозможно сохранить результат")
+            return
+        }
+        userDefaults.set(data, forKey: key)
     }
 }
 

@@ -132,26 +132,18 @@
 			isa = PBXGroup;
 			children = (
 				AB9BB2312A0E35070002D9DC /* ScreenModels */,
+				AB9BB2272A0E20070002D9DC /* Accuracy.swift */,
+				AB9BB2242A0E1EDC0002D9DC /* HighScore.swift */,
 				AB9BB21E2A0D718B0002D9DC /* QuestionModel.swift */,
 				AB9BB2322A0E46EE0002D9DC /* StatisticModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
 		};
-		AB407BB92A04E333006D475A /* ValueTypes */ = {
-			isa = PBXGroup;
-			children = (
-				AB9BB2242A0E1EDC0002D9DC /* HighScore.swift */,
-				AB9BB2272A0E20070002D9DC /* Accuracy.swift */,
-			);
-			path = ValueTypes;
-			sourceTree = "<group>";
-		};
 		AB9BB20D2A0CF9A20002D9DC /* Service */ = {
 			isa = PBXGroup;
 			children = (
 				AB9BB2262A0E1F0B0002D9DC /* Enums */,
-				AB407BB92A04E333006D475A /* ValueTypes */,
 				AB9BB2102A0D18A40002D9DC /* Protocols */,
 				AB9BB20E2A0CF9C50002D9DC /* QuestionsFactoryImpl.swift */,
 				AB9BB22B2A0E31CC0002D9DC /* StatisticServiceImpl.swift */,

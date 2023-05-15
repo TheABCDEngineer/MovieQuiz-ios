@@ -1,6 +1,12 @@
 import Foundation
 class QuestionsGeneratorImpl: QuestionsGeneratorProtocol {
     
+    func getQuestionsList() -> [QuestionModel] {
+        return DataConverter.convertQuestionDtoToModel(
+            generateQuestionsList()
+        )
+    }
+    
     private func generateQuestionsList() -> [QuestionDto] {
         let questionsList: [QuestionDto] = [
             QuestionDto (imageTitle: "The Godfather", movieRank: 9.2),
@@ -15,11 +21,5 @@ class QuestionsGeneratorImpl: QuestionsGeneratorProtocol {
             QuestionDto (imageTitle: "Vivarium", movieRank: 5.8),
         ]
         return questionsList
-    }
-    
-    func getQuestionsList() -> [QuestionModel] {
-        return DataConverter.convertQuestionDtoToModel(
-            generateQuestionsList()
-        )
     }
 }

@@ -10,25 +10,6 @@ class QuestionsFactoryImpl: QuestionsFactoryProtocol {
         self.questionsGenerator = questionsGenerator
     }
     
-    private func checkQuestionIsAlreadyUsed(_ questionIndex: Int) -> Bool {
-        for index in alreadyUsedQuestions {
-            if index == questionIndex {
-                return true
-            }
-        }
-        return false
-    }
-    
-    private func getNextQuestionIndex(_ questionCount: Int) -> Int {
-        var randomIndex = 0
-        repeat {
-            randomIndex = Int.random(in: 0..<questionCount)
-        } while
-        checkQuestionIsAlreadyUsed(randomIndex)
-        
-        return randomIndex
-    }
-    
     func addDelegate(delegate: QuestionFactoryDelegate) {
         self.delegate = delegate
     }
@@ -50,5 +31,24 @@ class QuestionsFactoryImpl: QuestionsFactoryProtocol {
     
     func getQuestionsCount() -> Int {
         return questions.count
+    }
+    
+    private func checkQuestionIsAlreadyUsed(_ questionIndex: Int) -> Bool {
+        for index in alreadyUsedQuestions {
+            if index == questionIndex {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func getNextQuestionIndex(_ questionCount: Int) -> Int {
+        var randomIndex = 0
+        repeat {
+            randomIndex = Int.random(in: 0..<questionCount)
+        } while
+        checkQuestionIsAlreadyUsed(randomIndex)
+        
+        return randomIndex
     }
 }

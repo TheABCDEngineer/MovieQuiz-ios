@@ -1,7 +1,7 @@
 import UIKit
 
 class AlertPresenter {
-    class func showAlert(
+    static func showAlert(
         model: AlertScreenModel,
         controller: UIViewController
     ) {
