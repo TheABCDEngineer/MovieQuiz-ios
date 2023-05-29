@@ -3,19 +3,19 @@ class ScreenModelsCreator {
     
     static func createQuestionScreenModel(
         counter: Int,
-        questionCount: Int,
+        questionAmount: Int,
         questionMovieRank: Int,
-        questionImageUrl: String
+        questionImage: Data
     ) -> QuestionScreenModel {
         
         return QuestionScreenModel(
-            counter: String(counter) + "/" + String(questionCount),
-            image: UIImage(named: questionImageUrl) ?? UIImage(),
+            counter: String(counter) + "/" + String(questionAmount),
+            image: UIImage(data: questionImage) ?? UIImage(),
             question: "Рейтинг этого фильма больше чем " + String(questionMovieRank) + "?"
         )
     }
     
-    static func createAlertScreenModel(
+    static func createQuizFinishedAlertScreenModel(
         correctResponcesCount: Int,
         questionsCount: Int,
         statistic: StatisticModel,
@@ -51,6 +51,21 @@ class ScreenModelsCreator {
             title: "Этот радунд окончен!",
             message: message,
             buttonText: "Сыграть ещё раз",
+            completion: completion
+        )
+    }
+    
+    static func createNetworkFailureAlertScreenModel(
+        errorDescription: String,
+        completion: @escaping (UIAlertAction) -> Void
+    ) -> AlertScreenModel {
+        let message = errorDescription
+        + "\nНевозможно загрузить данные"
+        
+        return AlertScreenModel(
+            title: "Что-то пошло не так(",
+            message: message,
+            buttonText: "Попробовать еще раз",
             completion: completion
         )
     }

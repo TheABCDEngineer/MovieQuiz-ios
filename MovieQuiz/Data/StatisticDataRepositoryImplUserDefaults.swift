@@ -3,6 +3,10 @@ import Foundation
 class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
     private let userDefaults = UserDefaults.standard
     
+    func saveExpiredQuestionsIdList(_ value: ExpiredMoviesId) {
+        saveJSONOnKey(codable: value, key: Key.expiredId.rawValue)
+    }
+    
     func saveQuizAmountEver(_ value: Int) {
         userDefaults.set(value, forKey: Key.quizAmountEver.rawValue)
     }
@@ -35,6 +39,14 @@ class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
         return record
     }
     
+    func loadExpiredQuestionsIdList() -> ExpiredMoviesId {
+        guard let data = userDefaults.data(forKey: Key.expiredId.rawValue),
+              let record = try? JSONDecoder().decode(ExpiredMoviesId.self, from: data) else {
+            return .init(items: [])
+        }
+        return record
+    }
+    
     private func saveJSONOnKey(codable: Codable, key: String) {
         guard let data = try? JSONEncoder().encode(codable) else {
             print("Невозможно сохранить результат")
@@ -49,5 +61,6 @@ extension StatisticDataRepositoryImplUserDefaults {
         case quizAmountEver
         case highScore
         case accuracy
+        case expiredId
     }
 }

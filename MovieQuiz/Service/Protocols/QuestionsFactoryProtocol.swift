@@ -2,7 +2,6 @@ import Foundation
 
 protocol QuestionsFactoryProtocol {
     func addDelegate(delegate: QuestionFactoryDelegate)
-    func generateNewQuestions()
+    func generateNewQuestions(requiredQuantity: Int)
     func getNextQuestion() -> QuestionModel?
-    func getQuestionsCount() -> Int
 }
