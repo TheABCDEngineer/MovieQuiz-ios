@@ -1,6 +1,6 @@
 import Foundation
 
-struct QuestionDto: Codable {
+struct MovieDto: Codable {
     let id: String
     let imageUrl: String
     let movieRank: String

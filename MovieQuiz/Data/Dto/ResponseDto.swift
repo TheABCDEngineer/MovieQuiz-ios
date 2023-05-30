@@ -2,5 +2,5 @@ import Foundation
 
 struct ResponseDto: Codable {
     let errorMessage: String
-    let items: [QuestionDto]
+    let items: [MovieDto]
 }

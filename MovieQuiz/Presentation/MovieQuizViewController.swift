@@ -27,16 +27,26 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateLoadingState(isLoading: true)
         questionFactory.addDelegate(delegate: self)
-        restartQuiz()
+        questionFactory.prepareFactory()
     }
   
     //MARK: - QuestionsFactoryDelegate
-    func onNewQuestionsGenerated() {
+    func onPreparedFactory() {
         DispatchQueue.main.async { [weak self] in
-            self?.updateLoadingState(isLoading: false)
-            self?.updateQuizQuestion()
+            self?.restartQuiz()
         }
+    }
+    
+    func onNewQuestionGenerated(model: QuizQuestionModel?) {
+        updateLoadingState(isLoading: false)
+        if model == nil {
+            finishQuiz()
+            return
+        }
+        enableButtons(true)
+        updateQuizQuestion(model!)
     }
     
     func onNetworkFailure(errorDescription: String) {
@@ -44,7 +54,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             errorDescription: errorDescription,
             completion: { [weak self] _ in
                 guard let self = self else {return}
-                self.questionFactory.generateNewQuestions(requiredQuantity: totalQuizQuestionsCount)
+                self.questionFactory.prepareFactory()
             }
         )
         AlertPresenter.showAlert(model: alertModel, delegate: self)
@@ -61,29 +71,35 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         loadIndicatorView.isHidden = !isLoading
     }
     
-    private func updateQuizQuestion() {
-        guard let question = questionFactory.getNextQuestion() else {
-            finishQuiz()
-            return
-        }
+    private func updateQuizQuestion(_ question: QuizQuestionModel) {
         let questionMovieRank = Int.random(in: 5..<10)
+        let trueIsMoreThanQustion = Bool.random()
         
         correctResponse = getCorrectResponse(
             trueMovieRank: question.movieRank,
-            questionMovieRank: questionMovieRank
+            questionMovieRank: questionMovieRank,
+            isMore: trueIsMoreThanQustion
         )
         let questionScreenModel = ScreenModelsCreator.createQuestionScreenModel(
             counter: questionCounter,
             questionAmount: totalQuizQuestionsCount,
             questionMovieRank: questionMovieRank,
-            questionImage: question.image
+            questionImage: question.image,
+            trueRankIsMoreThanQuestion: trueIsMoreThanQustion
         )
         showQuestion(questionScreenModel)
     }
     
-    private func getCorrectResponse(trueMovieRank: Float, questionMovieRank: Int) -> Response {
-        if trueMovieRank > Float(questionMovieRank) {
-            return .yes
+    private func getCorrectResponse(trueMovieRank: Float, questionMovieRank: Int, isMore: Bool) -> Response {
+        switch isMore {
+        case true:
+            if trueMovieRank > Float(questionMovieRank) {
+                return .yes
+            }
+        case false:
+            if trueMovieRank < Float(questionMovieRank) {
+                return .yes
+            }
         }
         return .no
     }
@@ -116,8 +132,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             guard let self = self else {
                 return
             }
-            self.updateQuizQuestion()
-            self.enableButtons(true)
+            self.updateLoadingState(isLoading: true)
+            self.questionFactory.getNextQuestion()
         }
     }
     
@@ -142,7 +158,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionCounter = 1
         correctResponcesCounter = 0
         updateLoadingState(isLoading: true)
-        questionFactory.generateNewQuestions(requiredQuantity: totalQuizQuestionsCount)
+        questionFactory.prepareNewQuestionsQueue(questionsQuantity: totalQuizQuestionsCount)
     }
     
     private func enableButtons(_ isEnabled: Bool) {

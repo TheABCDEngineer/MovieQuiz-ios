@@ -5,13 +5,18 @@ class ScreenModelsCreator {
         counter: Int,
         questionAmount: Int,
         questionMovieRank: Int,
-        questionImage: Data
+        questionImage: Data,
+        trueRankIsMoreThanQuestion: Bool
     ) -> QuestionScreenModel {
+        var subQuestion = "меньше"
+        if trueRankIsMoreThanQuestion {
+            subQuestion = "больше"
+        }
         
         return QuestionScreenModel(
             counter: String(counter) + "/" + String(questionAmount),
             image: UIImage(data: questionImage) ?? UIImage(),
-            question: "Рейтинг этого фильма больше чем " + String(questionMovieRank) + "?"
+            question: "Рейтинг этого фильма " + subQuestion + " чем " + String(questionMovieRank) + "?"
         )
     }
     

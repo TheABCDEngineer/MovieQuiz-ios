@@ -8,8 +8,8 @@ class NetworkLoaderImp: NetworkLoaderProtocol {
         self.networkClient = networkClient
     }
     
-    func getQuestionsList(
-        onSuccess: @escaping ([QuestionModel]) -> Void,
+    func getMoviesList(
+        onSuccess: @escaping ([MovieModel]) -> Void,
         onFailure: @escaping (String) -> Void
     ){
         guard let url = URL(
@@ -21,16 +21,15 @@ class NetworkLoaderImp: NetworkLoaderProtocol {
         
         networkClient.fetch(
             url: url,
-            onSuccess: {response in
-                DispatchQueue.global().async { [weak self] in
-                    do {
-                        let dto = try JSONDecoder().decode(ResponseDto.self, from: response)
-                        onSuccess(
-                            (self?.dataConverter.convertQuestionDtoToModel(dto.items))!
-                        )
-                    } catch {
-                        onFailure("Ошибка данных с сервера")
-                    }
+            onSuccess: { [weak self] response in
+                guard let self = self else { return }
+                do {
+                    let dto = try JSONDecoder().decode(ResponseDto.self, from: response)
+                    onSuccess(
+                        self.dataConverter.convertMovieDtoToModel(dto.items)
+                    )
+                } catch {
+                    onFailure("Ошибка данных с сервера")
                 }
             },
             onFailure: {error in

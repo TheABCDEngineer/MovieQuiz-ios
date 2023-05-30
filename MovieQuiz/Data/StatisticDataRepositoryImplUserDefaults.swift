@@ -3,7 +3,7 @@ import Foundation
 class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
     private let userDefaults = UserDefaults.standard
     
-    func saveExpiredQuestionsIdList(_ value: ExpiredMoviesId) {
+    func saveExpiredMoviesIdList(_ value: ExpiredMoviesId) {
         saveJSONOnKey(codable: value, key: Key.expiredId.rawValue)
     }
     
@@ -39,7 +39,7 @@ class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
         return record
     }
     
-    func loadExpiredQuestionsIdList() -> ExpiredMoviesId {
+    func loadExpiredMoviesIdList() -> ExpiredMoviesId {
         guard let data = userDefaults.data(forKey: Key.expiredId.rawValue),
               let record = try? JSONDecoder().decode(ExpiredMoviesId.self, from: data) else {
             return .init(items: [])

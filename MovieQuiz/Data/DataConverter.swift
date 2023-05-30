@@ -1,40 +1,25 @@
 import Foundation
 
 class DataConverter {
-    func convertQuestionDtoToModel(_ dto: QuestionDto) -> QuestionModel {
-        return QuestionModel(
+    func convertMovieDtoToModel(_ dto: MovieDto) -> MovieModel {
+        return MovieModel(
             id: dto.id,
-            image: createImageDataFromUrl(
-                getLinkForResizeImage(baseLink: dto.imageUrl)
+            imageUrl: URL(
+                string: getLinkForResizeImage(baseLink: dto.imageUrl)
             ),
             movieRank: Float(dto.movieRank) ?? 0
         )
     }
     
-    func convertQuestionDtoToModel(_ arrayDto: [QuestionDto]) -> [QuestionModel] {
-        var arrayQuestionModel = [QuestionModel]()
+    func convertMovieDtoToModel(_ arrayDto: [MovieDto]) -> [MovieModel] {
+        var arrayQuestionModel = [MovieModel]()
         
         for element in arrayDto {
             arrayQuestionModel.append(
-                convertQuestionDtoToModel(element)
+                convertMovieDtoToModel(element)
             )
         }
         return arrayQuestionModel
-    }
-    
-    private func createImageDataFromUrl(_ link: String) -> Data {
-        guard let url = URL(
-            string: link
-        ) else {
-            return Data()
-        }
-        
-        var imageData = Data()
-        do {
-            imageData = try Data(contentsOf: url)
-        } catch {}
-        
-        return imageData
     }
     
     private func getLinkForResizeImage(baseLink: String) -> String {

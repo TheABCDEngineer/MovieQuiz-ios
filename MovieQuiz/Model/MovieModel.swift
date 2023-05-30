@@ -1,7 +1,7 @@
 import Foundation
 
-struct QuestionModel {
+struct MovieModel {
     let id: String
-    let image: Data
+    let imageUrl: URL?
     let movieRank: Float
 }
