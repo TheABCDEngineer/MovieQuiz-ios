@@ -57,7 +57,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 self.questionFactory.prepareFactory()
             }
         )
-        AlertPresenter.showAlert(model: alertModel, delegate: self)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {return}
+            AlertPresenter.showAlert(model: alertModel, delegate: self)
+        }
     }
     
     //MARK: - AlertPresenterDelegate
