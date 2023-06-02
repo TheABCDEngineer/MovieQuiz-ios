@@ -3,7 +3,7 @@ import UIKit
 class AlertPresenter {
     static func showAlert(
         model: AlertScreenModel,
-        controller: UIViewController
+        delegate: AlertPresenterDelegate
     ) {
         let alert = UIAlertController(
             title: model.title,
@@ -16,6 +16,6 @@ class AlertPresenter {
             handler: model.completion
         )
         alert.addAction(action)
-        controller.present(alert, animated: true, completion: nil)
+        delegate.presentAlert(alert)
     }
 }

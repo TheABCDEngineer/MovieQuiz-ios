@@ -1,5 +1,7 @@
 import Foundation
 
 protocol QuestionFactoryDelegate: AnyObject {
-    func onNewQuestionsGenerated() 
+    func onPreparedFactory()
+    func onNewQuestionGenerated(model: QuizQuestionModel?)
+    func onNetworkFailure(errorDescription: String)
 }

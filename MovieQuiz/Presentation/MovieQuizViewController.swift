@@ -1,14 +1,19 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
+   
     //MARK: - Properties
     private let questionFactory: QuestionsFactoryProtocol = QuestionsFactoryImpl(
-        questionsGenerator: QuestionsGeneratorImpl()
+        networkLoader: NetworkLoaderImp(
+            networkClient: NetworkClient()
+        ),
+        repository: StatisticDataRepositoryImplUserDefaults()
     )
     private let statisticService: StatisticServiceProtocol = StatisticServiceImpl(
         dataRepository: StatisticDataRepositoryImplUserDefaults()
     )
     private var questionCounter = 1
+    private let totalQuizQuestionsCount = 10
     private var correctResponcesCounter = 0
     private var correctResponse: Response = .yes
   
@@ -17,45 +22,87 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet weak private var imageView: UIImageView!
     @IBOutlet weak private var buttonYesView: UIButton!
     @IBOutlet weak private var buttonNoView: UIButton!
+    @IBOutlet weak private var loadIndicatorView: UIActivityIndicatorView!
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateLoadingState(isLoading: true)
         questionFactory.addDelegate(delegate: self)
-        restartQuiz()
+        questionFactory.prepareFactory()
     }
   
     //MARK: - QuestionsFactoryDelegate
-    func onNewQuestionsGenerated() {
+    func onPreparedFactory() {
         DispatchQueue.main.async { [weak self] in
-            self?.updateQuizQuestion()
+            self?.restartQuiz()
         }
     }
     
-    //MARK: - Private functions
-    private func updateQuizQuestion() {
-        guard let question = questionFactory.getNextQuestion() else {
+    func onNewQuestionGenerated(model: QuizQuestionModel?) {
+        updateLoadingState(isLoading: false)
+        if model == nil {
             finishQuiz()
             return
         }
+        enableButtons(true)
+        updateQuizQuestion(model!)
+    }
+    
+    func onNetworkFailure(errorDescription: String) {
+        let alertModel = ScreenModelsCreator.createNetworkFailureAlertScreenModel(
+            errorDescription: errorDescription,
+            completion: { [weak self] _ in
+                guard let self = self else {return}
+                self.questionFactory.prepareFactory()
+            }
+        )
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {return}
+            AlertPresenter.showAlert(model: alertModel, delegate: self)
+        }
+    }
+    
+    //MARK: - AlertPresenterDelegate
+    func presentAlert(_ alert: UIAlertController) {
+        present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: - Private functions
+    private func updateLoadingState(isLoading: Bool) {
+        enableButtons(!isLoading)
+        loadIndicatorView.isHidden = !isLoading
+    }
+    
+    private func updateQuizQuestion(_ question: QuizQuestionModel) {
         let questionMovieRank = Int.random(in: 5..<10)
+        let trueIsMoreThanQustion = Bool.random()
         
         correctResponse = getCorrectResponse(
             trueMovieRank: question.movieRank,
-            questionMovieRank: questionMovieRank
+            questionMovieRank: questionMovieRank,
+            isMore: trueIsMoreThanQustion
         )
         let questionScreenModel = ScreenModelsCreator.createQuestionScreenModel(
             counter: questionCounter,
-            questionCount: questionFactory.getQuestionsCount(),
+            questionAmount: totalQuizQuestionsCount,
             questionMovieRank: questionMovieRank,
-            questionImageUrl: question.imageUrl
+            questionImage: question.image,
+            trueRankIsMoreThanQuestion: trueIsMoreThanQustion
         )
         showQuestion(questionScreenModel)
     }
     
-    private func getCorrectResponse(trueMovieRank: Float, questionMovieRank: Int) -> Response {
-        if trueMovieRank > Float(questionMovieRank) {
-            return .yes
+    private func getCorrectResponse(trueMovieRank: Float, questionMovieRank: Int, isMore: Bool) -> Response {
+        switch isMore {
+        case true:
+            if trueMovieRank > Float(questionMovieRank) {
+                return .yes
+            }
+        case false:
+            if trueMovieRank < Float(questionMovieRank) {
+                return .yes
+            }
         }
         return .no
     }
@@ -88,32 +135,33 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             guard let self = self else {
                 return
             }
-            self.updateQuizQuestion()
-            self.enableButtons(true)
+            self.updateLoadingState(isLoading: true)
+            self.questionFactory.getNextQuestion()
         }
     }
     
     private func finishQuiz() {
         let statisticModel = statisticService.getStatistic(
             currentGameCorrects: correctResponcesCounter,
-            currentGameQuestionAmount: questionFactory.getQuestionsCount()
+            currentGameQuestionAmount: totalQuizQuestionsCount
         )
-        let alertModel = ScreenModelsCreator.createAlertScreenModel(
+        let alertModel = ScreenModelsCreator.createQuizFinishedAlertScreenModel(
             correctResponcesCount: correctResponcesCounter,
-            questionsCount: questionFactory.getQuestionsCount(),
+            questionsCount: totalQuizQuestionsCount,
             statistic: statisticModel,
             completion: { [weak self] _ in
                 guard let self = self else {return}
                 self.restartQuiz()
             }
         )
-        AlertPresenter.showAlert(model: alertModel, controller: self)
+        AlertPresenter.showAlert(model: alertModel, delegate: self)
     }
     
     private func restartQuiz() {
         questionCounter = 1
         correctResponcesCounter = 0
-        questionFactory.generateNewQuestions()
+        updateLoadingState(isLoading: true)
+        questionFactory.prepareNewQuestionsQueue(questionsQuantity: totalQuizQuestionsCount)
     }
     
     private func enableButtons(_ isEnabled: Bool) {

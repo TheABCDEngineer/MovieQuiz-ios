@@ -3,19 +3,24 @@ class ScreenModelsCreator {
     
     static func createQuestionScreenModel(
         counter: Int,
-        questionCount: Int,
+        questionAmount: Int,
         questionMovieRank: Int,
-        questionImageUrl: String
+        questionImage: Data,
+        trueRankIsMoreThanQuestion: Bool
     ) -> QuestionScreenModel {
+        var subQuestion = "меньше"
+        if trueRankIsMoreThanQuestion {
+            subQuestion = "больше"
+        }
         
         return QuestionScreenModel(
-            counter: String(counter) + "/" + String(questionCount),
-            image: UIImage(named: questionImageUrl) ?? UIImage(),
-            question: "Рейтинг этого фильма больше чем " + String(questionMovieRank) + "?"
+            counter: String(counter) + "/" + String(questionAmount),
+            image: UIImage(data: questionImage) ?? UIImage(),
+            question: "Рейтинг этого фильма " + subQuestion + " чем " + String(questionMovieRank) + "?"
         )
     }
     
-    static func createAlertScreenModel(
+    static func createQuizFinishedAlertScreenModel(
         correctResponcesCount: Int,
         questionsCount: Int,
         statistic: StatisticModel,
@@ -54,4 +59,20 @@ class ScreenModelsCreator {
             completion: completion
         )
     }
+    
+    static func createNetworkFailureAlertScreenModel(
+        errorDescription: String,
+        completion: @escaping (UIAlertAction) -> Void
+    ) -> AlertScreenModel {
+        let message = errorDescription
+        + "\nНевозможно загрузить данные"
+        
+        return AlertScreenModel(
+            title: "Что-то пошло не так(",
+            message: message,
+            buttonText: "Попробовать еще раз",
+            completion: completion
+        )
+    }
 }
+

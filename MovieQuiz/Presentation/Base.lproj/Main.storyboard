@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -52,7 +52,7 @@
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qMZ-AB-0vd" userLabel="image_Preview">
                                         <rect key="frame" x="0.0" y="43.5" width="374" height="561"/>
-                                        <color key="backgroundColor" name="YP White"/>
+                                        <color key="backgroundColor" name="YP Background "/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="qMZ-AB-0vd" secondAttribute="height" multiplier="2:3" id="Yac-py-YGg"/>
                                         </constraints>
@@ -62,7 +62,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше, чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4A-hD-XvT" userLabel="label_Quastion">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Загрузка данных, пожалуйста подождите" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4A-hD-XvT" userLabel="label_Quastion">
                                         <rect key="frame" x="0.0" y="624.5" width="374" height="109.5"/>
                                         <fontDescription key="fontDescription" name="YSDisplay-Bold" family="YS Display" pointSize="23"/>
                                         <color key="textColor" name="YP White"/>
@@ -117,10 +117,15 @@
                                     <constraint firstItem="yCF-7F-cgK" firstAttribute="top" secondItem="kGL-BD-f3Q" secondAttribute="top" id="otU-5m-jRB"/>
                                 </constraints>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="2B2-tU-KaI">
+                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Background "/>
                         <constraints>
+                            <constraint firstItem="2B2-tU-KaI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Zy-MZ-tHC"/>
+                            <constraint firstItem="2B2-tU-KaI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="R7b-mt-Vul"/>
                             <constraint firstItem="kGL-BD-f3Q" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="eqE-qJ-m2J"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="kGL-BD-f3Q" secondAttribute="trailing" constant="20" id="iWI-8A-huE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="leading" secondItem="kGL-BD-f3Q" secondAttribute="leading" constant="-20" id="qXo-bm-Oau"/>
@@ -131,6 +136,7 @@
                         <outlet property="buttonNoView" destination="Fak-fy-u0J" id="x7h-0T-beu"/>
                         <outlet property="buttonYesView" destination="R0f-jw-KNz" id="RxN-hB-PnJ"/>
                         <outlet property="imageView" destination="qMZ-AB-0vd" id="dep-aQ-1Kt"/>
+                        <outlet property="loadIndicatorView" destination="2B2-tU-KaI" id="vKr-w6-TkI"/>
                         <outlet property="questionIndexView" destination="taI-rY-bP1" id="Tc2-df-qY1"/>
                         <outlet property="questionView" destination="U4A-hD-XvT" id="e4J-rC-GXl"/>
                     </connections>
