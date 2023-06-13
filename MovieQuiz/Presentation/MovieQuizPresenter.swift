@@ -44,7 +44,9 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
             finishQuiz()
             return
         }
-        updateQuizQuestion(model!)
+        view.showQuestion(
+            model: convertToScreenModel(model: model!)
+        )
     }
     
     func onNetworkFailure(errorDescription: String) {
@@ -81,23 +83,22 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     }
     
     //MARK: - Private functions
-    private func updateQuizQuestion(_ question: QuizQuestionModel) {
+    private func convertToScreenModel(model: QuizQuestionModel) -> QuestionScreenModel {
         let questionMovieRank = Int.random(in: 5..<10)
         let trueIsMoreThanQustion = Bool.random()
         
         correctResponse = getCorrectResponse(
-            trueMovieRank: question.movieRank,
+            trueMovieRank: model.movieRank,
             questionMovieRank: questionMovieRank,
             isMore: trueIsMoreThanQustion
         )
-        let questionScreenModel = ScreenModelsCreator.createQuestionScreenModel(
+        return ScreenModelsCreator.createQuestionScreenModel(
             counter: questionCounter,
             questionAmount: totalQuizQuestionsCount,
             questionMovieRank: questionMovieRank,
-            questionImage: question.image,
+            questionImage: model.image,
             trueRankIsMoreThanQuestion: trueIsMoreThanQustion
         )
-        view.showQuestion(model: questionScreenModel)
     }
     
     private func finishQuiz() {
