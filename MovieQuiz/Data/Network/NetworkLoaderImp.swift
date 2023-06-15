@@ -2,7 +2,6 @@ import Foundation
 
 class NetworkLoaderImp: NetworkLoaderProtocol {
     private let networkClient: NetworkClientProtocol
-    private let dataConverter = DataConverter()
     
     init(networkClient: NetworkClientProtocol) {
         self.networkClient = networkClient
@@ -26,7 +25,7 @@ class NetworkLoaderImp: NetworkLoaderProtocol {
                 do {
                     let dto = try JSONDecoder().decode(ResponseDto.self, from: response)
                     onSuccess(
-                        self.dataConverter.convertMovieDtoToModel(dto.items)
+                        self.convertMovieDtoToModel(dto.items)
                     )
                 } catch {
                     onFailure("Ошибка данных с сервера")
@@ -36,5 +35,36 @@ class NetworkLoaderImp: NetworkLoaderProtocol {
                 onFailure(error)
             }
         )
+    }
+}
+
+private extension NetworkLoaderImp {
+    func convertMovieDtoToModel(_ dto: MovieDto) -> MovieModel {
+        return MovieModel(
+            id: dto.id,
+            imageUrl: URL(
+                string: getLinkForResizeImage(baseLink: dto.imageUrl)
+            ),
+            movieRank: Float(dto.movieRank) ?? 0
+        )
+    }
+    
+    func convertMovieDtoToModel(_ arrayDto: [MovieDto]) -> [MovieModel] {
+        var arrayQuestionModel = [MovieModel]()
+        
+        for element in arrayDto {
+            arrayQuestionModel.append(
+                convertMovieDtoToModel(element)
+            )
+        }
+        return arrayQuestionModel
+    }
+    
+    func getLinkForResizeImage(baseLink: String) -> String {
+        let newLink = baseLink.components(separatedBy: "._")[0] + "._V0_UX600_.jpg"
+        guard URL(string: newLink) != nil else {
+            return baseLink
+        }
+        return newLink
     }
 }

@@ -12,6 +12,7 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     private let view: MovieQuizViewControllerProtocol
     private let questionFactory: QuestionsFactoryProtocol
     private let statisticService: StatisticServiceProtocol
+    private let valueCreator: ValueCreaterProtocol
     private var questionCounter = 1
     private let totalQuizQuestionsCount = 10
     private var correctResponcesCounter = 0
@@ -21,11 +22,13 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     init(
         viewController: MovieQuizViewControllerProtocol,
         questionFactory: QuestionsFactoryProtocol,
-        statisticService: StatisticServiceProtocol
+        statisticService: StatisticServiceProtocol,
+        valueCreator: ValueCreaterProtocol
     ) {
         self.view = viewController
         self.questionFactory = questionFactory
         self.statisticService = statisticService
+        self.valueCreator = valueCreator
         
         questionFactory.addDelegate(delegate: self)
         questionFactory.prepareFactory()
@@ -50,15 +53,15 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     }
     
     func onNetworkFailure(errorDescription: String) {
-        let alertModel = ScreenModelsCreator.createNetworkFailureAlertScreenModel(
-            errorDescription: errorDescription,
-            completion: { [weak self] _ in
-                guard let self = self else {return}
-                self.questionFactory.prepareFactory()
-            }
-        )
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {return}
+            let alertModel = ScreenModelsCreator.createNetworkFailureAlertScreenModel(
+                errorDescription: errorDescription,
+                completion: { [weak self] _ in
+                    guard let self = self else {return}
+                    self.questionFactory.prepareFactory()
+                }
+            )
             view.showAlert(model: alertModel)
         }
     }
@@ -84,8 +87,8 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     
     //MARK: - Private functions
     private func convertToScreenModel(model: QuizQuestionModel) -> QuestionScreenModel {
-        let questionMovieRank = Int.random(in: 5..<10)
-        let trueIsMoreThanQustion = Bool.random()
+        let questionMovieRank = valueCreator.getIntValue()
+        let trueIsMoreThanQustion = valueCreator.getBoolValue()
         
         correctResponse = getCorrectResponse(
             trueMovieRank: model.movieRank,

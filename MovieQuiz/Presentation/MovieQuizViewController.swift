@@ -23,10 +23,13 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             networkLoader: networkLoader,
             repository: repository
         )
+        let valueCreator = ValueCreatorImplRandom()
+        
         presenter = MovieQuizPresenter(
             viewController: self,
             questionFactory: questionFactory,
-            statisticService: statisticService
+            statisticService: statisticService,
+            valueCreator: valueCreator
         )
         updateLoadingState(isLoading: true)
     }
