@@ -31,6 +31,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             statisticService: statisticService,
             valueCreator: valueCreator
         )
+        loadIndicatorView.accessibilityIdentifier = "loadIndicator"
         updateLoadingState(isLoading: true)
     }
  
