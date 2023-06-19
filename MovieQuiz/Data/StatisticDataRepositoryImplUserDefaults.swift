@@ -57,7 +57,7 @@ class StatisticDataRepositoryImplUserDefaults: StatisticDataRepository {
 }
 
 extension StatisticDataRepositoryImplUserDefaults {
-    private enum Key: String {
+    enum Key: String {
         case quizAmountEver
         case highScore
         case accuracy
