@@ -63,9 +63,7 @@ class MovieQuizPresenterTest: XCTestCase {
     func testCreatingCorrectResponse() throws {
         let presenter = initPresenter()
         let trueMovieRating = Float(7.2)
-        let qestionMovieRating = 5 //valueCreator.mockInt
-        //Вопрос: Рейтинг этого фильма больше чем 5?
-        //правильный ответ
+        
         var correctAnswer = Response.yes
 
         

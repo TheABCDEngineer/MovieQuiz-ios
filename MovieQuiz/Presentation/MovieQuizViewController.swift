@@ -2,7 +2,7 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol, AlertPresenterDelegate {
     //MARK: - Properties
-    private var presenter: MovieQuizPresenterProtocol?
+    private var presenter: MovieQuizPresenterProtocol!
   
     @IBOutlet weak private var questionIndexView: UILabel!
     @IBOutlet weak private var questionView: UILabel!
@@ -15,12 +15,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     override func viewDidLoad() {
         super.viewDidLoad()
         let repository = StatisticDataRepositoryImplUserDefaults()
-        let networkLoader = NetworkLoaderImp(
+        let moviesLoader = MoviesLoaderImp(
             networkClient: NetworkClient()
         )
         let statisticService = StatisticServiceImpl(dataRepository: repository)
         let questionFactory = QuestionsFactoryImpl(
-            networkLoader: networkLoader,
+            moviesLoader: moviesLoader,
             repository: repository
         )
         let valueCreator = ValueCreatorImplRandom()
@@ -58,9 +58,11 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     func showUserResponseResult(isCorrect: Bool) {
-        var borderState = ImageBorderState.incorrectUserResponse
+        let borderState: ImageBorderState
         if isCorrect {
             borderState = ImageBorderState.correctUserResponse
+        } else {
+            borderState = ImageBorderState.incorrectUserResponse
         }
         showImageBorder(borderState)
     }
@@ -80,10 +82,10 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     //MARK: - Actions
     @IBAction private func onNoButtonClick() {
         enableButtons(false)
-        presenter?.onButtonClick(userResponse: .no)
+        presenter.onButtonClick(userResponse: .no)
     }
     @IBAction private func onYesButtonClick() {
         enableButtons(false)
-        presenter?.onButtonClick(userResponse: .yes)
+        presenter.onButtonClick(userResponse: .yes)
     }
 }

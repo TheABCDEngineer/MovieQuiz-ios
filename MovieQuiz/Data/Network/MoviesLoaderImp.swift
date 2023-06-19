@@ -1,6 +1,6 @@
 import Foundation
 
-class NetworkLoaderImp: NetworkLoaderProtocol {
+class MoviesLoaderImp: MoviesLoaderProtocol {
     private let networkClient: NetworkClientProtocol
     
     init(networkClient: NetworkClientProtocol) {
@@ -38,7 +38,7 @@ class NetworkLoaderImp: NetworkLoaderProtocol {
     }
 }
 
-private extension NetworkLoaderImp {
+private extension MoviesLoaderImp {
     func convertMovieDtoToModel(_ dto: MovieDto) -> MovieModel {
         return MovieModel(
             id: dto.id,

@@ -15,12 +15,12 @@ class QuestionFactoryTest: XCTestCase {
     
     func testDelegateSuccessOnPreparedFactory() throws {
         let delegate = StubQuestionFactoryDelegat()
-        let networkLoader = NetworkLoaderImp(
+        let moviesLoader = MoviesLoaderImp(
             networkClient: StubNetworkClient(emulateError: false)
         )
         initDataRepository(data: ExpiredMoviesId(items: []))
         let questionFactory = QuestionsFactoryImpl(
-            networkLoader: networkLoader,
+            moviesLoader: moviesLoader,
             repository: dataRepository
         )
         questionFactory.addDelegate(delegate: delegate)
@@ -35,12 +35,12 @@ class QuestionFactoryTest: XCTestCase {
         let delegate = StubQuestionFactoryDelegat()
         delegate.expection = expectation(description: "async")
         
-        let networkLoader = NetworkLoaderImp(
+        let moviesLoader = MoviesLoaderImp(
             networkClient: StubNetworkClient(emulateError: false)
         )
         initDataRepository(data: ExpiredMoviesId(items: []))
         let questionFactory = QuestionsFactoryImpl(
-            networkLoader: networkLoader,
+            moviesLoader: moviesLoader,
             repository: dataRepository
         )
       
@@ -58,12 +58,12 @@ class QuestionFactoryTest: XCTestCase {
     
     func testDelegateSuccessOnNetworkFailure() throws {
         let delegate = StubQuestionFactoryDelegat()
-        let networkLoader = NetworkLoaderImp(
+        let moviesLoader = MoviesLoaderImp(
             networkClient: StubNetworkClient(emulateError: true)
         )
  
         let questionFactory = QuestionsFactoryImpl(
-            networkLoader: networkLoader,
+            moviesLoader: moviesLoader,
             repository: dataRepository
         )
         
@@ -85,12 +85,12 @@ class QuestionFactoryTest: XCTestCase {
             expectations.append(expectation(description: String(i)))
         }
         
-        let networkLoader = StubNetworkLoader(requaredMoviesCount: moviesCount)
+        let moviesLoader = StubMoviesLoader(requaredMoviesCount: moviesCount)
 
         initDataRepository(data: ExpiredMoviesId(items: []))
 
         let questionFactory = QuestionsFactoryImpl(
-            networkLoader: networkLoader,
+            moviesLoader: moviesLoader,
             repository: dataRepository
         )
 

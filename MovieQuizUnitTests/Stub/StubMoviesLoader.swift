@@ -8,7 +8,7 @@
 import Foundation
 @testable import MovieQuiz
 
-class StubNetworkLoader: NetworkLoaderProtocol {
+class StubMoviesLoader: MoviesLoaderProtocol {
     var requaredMoviesCount: Int
     init(requaredMoviesCount: Int) {
         self.requaredMoviesCount = requaredMoviesCount
@@ -20,7 +20,7 @@ class StubNetworkLoader: NetworkLoaderProtocol {
         )
     }
 }
-private extension StubNetworkLoader {
+private extension StubMoviesLoader {
     func getMoviesList(listCount: Int) -> [MovieModel] {
         let mockMovie = MockConvertData.movies[0]
         var movieList = [MovieModel]()

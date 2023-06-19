@@ -1,7 +1,7 @@
 import Foundation
 
 class QuestionsFactoryImpl: QuestionsFactoryProtocol {
-    private let networkLoader: NetworkLoaderProtocol
+    private let moviesLoader: MoviesLoaderProtocol
     private let repository: StatisticDataRepository
     private var movies = [MovieModel]()
     private var requaredQuestionsQuantity = 0
@@ -10,10 +10,10 @@ class QuestionsFactoryImpl: QuestionsFactoryProtocol {
     private weak var delegate: QuestionFactoryDelegate?
     
     init(
-        networkLoader: NetworkLoaderProtocol,
+        moviesLoader: MoviesLoaderProtocol,
         repository: StatisticDataRepository
     ) {
-        self.networkLoader = networkLoader
+        self.moviesLoader = moviesLoader
         self.repository = repository
     }
     
@@ -22,7 +22,7 @@ class QuestionsFactoryImpl: QuestionsFactoryProtocol {
     }
     
     func prepareFactory() {
-        networkLoader.getMoviesList(
+        moviesLoader.getMoviesList(
             onSuccess: { [weak self] questionsList in
                 guard let self = self else { return }
                 self.movies = questionsList

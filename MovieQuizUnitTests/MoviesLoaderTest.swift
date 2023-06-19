@@ -9,16 +9,13 @@ import Foundation
 import XCTest
 @testable import MovieQuiz
 
-class NetworkLoaderTests: XCTestCase {
+class MoviesLoaderTests: XCTestCase {
     func testSuccessLoading() throws {
-        // Given
         let expectedData = MockConvertData.movies
-        let networkLoader = NetworkLoaderImp(
+        let moviesLoader = MoviesLoaderImp(
             networkClient: StubNetworkClient(emulateError: false)
         )
-        // When
-        // Then
-        networkLoader.getMoviesList(
+        moviesLoader.getMoviesList(
             onSuccess: { result in
                 XCTAssertEqual(result.count, 2)
         
@@ -35,12 +32,9 @@ class NetworkLoaderTests: XCTestCase {
     }
     
     func testFailureLoading() throws {
-        // Given
-        let networkLoader = NetworkLoaderImp(
+        let networkLoader = MoviesLoaderImp(
             networkClient: StubNetworkClient(emulateError: true)
         )
-        // When
-        // Then
         networkLoader.getMoviesList(
             onSuccess: {_ in
                 XCTFail("Неожидаемая ошибка")
@@ -51,5 +45,3 @@ class NetworkLoaderTests: XCTestCase {
         )
     }
 }
-    
-
