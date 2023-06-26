@@ -9,6 +9,14 @@ import Foundation
 @testable import MovieQuiz
 
 class StubQuestionFactory: QuestionsFactoryProtocol {
+    func getQuestionMovieRank(from: Int, to: Int) -> Int {
+        return 5
+    }
+    
+    func getIsMore() -> Bool {
+        return true
+    }
+    
     func addDelegate(delegate: MovieQuiz.QuestionFactoryDelegate) {}
     
     func prepareFactory() {}

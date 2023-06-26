@@ -11,7 +11,6 @@ import XCTest
 
 class MovieQuizPresenterTest: XCTestCase {
     let viewConntroller = StubViewController()
-    let valueCreator = StubValueCreator(mockInt: 5, mockBool: true)
     
     func testConvertQuestionModelToScreenModel() throws {
         let presenter = initPresenter()
@@ -82,7 +81,7 @@ extension MovieQuizPresenterTest {
         return MovieQuizPresenter(
             viewController: self.viewConntroller,
             questionFactory: StubQuestionFactory(),
-            statisticService: StatisticServiceImpl(dataRepository: StubDataRepository()),
-            valueCreator: self.valueCreator)
+            statisticService: StatisticServiceImpl(dataRepository: StubDataRepository())
+        )
     }
 }

@@ -23,13 +23,11 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             moviesLoader: moviesLoader,
             repository: repository
         )
-        let valueCreator = ValueCreatorImplRandom()
         
         presenter = MovieQuizPresenter(
             viewController: self,
             questionFactory: questionFactory,
-            statisticService: statisticService,
-            valueCreator: valueCreator
+            statisticService: statisticService
         )
         loadIndicatorView.accessibilityIdentifier = "loadIndicator"
         updateLoadingState(isLoading: true)

@@ -29,9 +29,6 @@
 		AB48148E2A3AF1E400164998 /* StubMoviesLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB48148D2A3AF1E400164998 /* StubMoviesLoader.swift */; };
 		AB4814902A3AF24400164998 /* StubQuestionFactoryDelegat.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB48148F2A3AF24400164998 /* StubQuestionFactoryDelegat.swift */; };
 		AB4814922A3AF36600164998 /* StubMoviesQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4814912A3AF36600164998 /* StubMoviesQuizViewController.swift */; };
-		AB4814942A3AF97900164998 /* ValueCreatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4814932A3AF97900164998 /* ValueCreatorProtocol.swift */; };
-		AB4814962A3AF9E200164998 /* ValueCreatorImpRandom.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4814952A3AF9E200164998 /* ValueCreatorImpRandom.swift */; };
-		AB4814982A3AFB9900164998 /* StubValueCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4814972A3AFB9900164998 /* StubValueCreator.swift */; };
 		AB48149C2A3BA77B00164998 /* StubQuestionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB48149B2A3BA77B00164998 /* StubQuestionFactory.swift */; };
 		AB4814A52A3BABEF00164998 /* MovieQuizUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4814A42A3BABEF00164998 /* MovieQuizUITests.swift */; };
 		AB658B2D2A0CDA910058AD45 /* MoviesLoaderImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB658B2C2A0CDA910058AD45 /* MoviesLoaderImp.swift */; };
@@ -108,9 +105,6 @@
 		AB48148D2A3AF1E400164998 /* StubMoviesLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubMoviesLoader.swift; sourceTree = "<group>"; };
 		AB48148F2A3AF24400164998 /* StubQuestionFactoryDelegat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubQuestionFactoryDelegat.swift; sourceTree = "<group>"; };
 		AB4814912A3AF36600164998 /* StubMoviesQuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubMoviesQuizViewController.swift; sourceTree = "<group>"; };
-		AB4814932A3AF97900164998 /* ValueCreatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCreatorProtocol.swift; sourceTree = "<group>"; };
-		AB4814952A3AF9E200164998 /* ValueCreatorImpRandom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCreatorImpRandom.swift; sourceTree = "<group>"; };
-		AB4814972A3AFB9900164998 /* StubValueCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubValueCreator.swift; sourceTree = "<group>"; };
 		AB48149B2A3BA77B00164998 /* StubQuestionFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubQuestionFactory.swift; sourceTree = "<group>"; };
 		AB4814A22A3BABEF00164998 /* MovieQuizUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieQuizUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB4814A42A3BABEF00164998 /* MovieQuizUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieQuizUITests.swift; sourceTree = "<group>"; };
@@ -250,7 +244,6 @@
 				AB48148F2A3AF24400164998 /* StubQuestionFactoryDelegat.swift */,
 				AB4814912A3AF36600164998 /* StubMoviesQuizViewController.swift */,
 				AB48149B2A3BA77B00164998 /* StubQuestionFactory.swift */,
-				AB4814972A3AFB9900164998 /* StubValueCreator.swift */,
 			);
 			path = Stub;
 			sourceTree = "<group>";
@@ -281,7 +274,6 @@
 				AB9BB20E2A0CF9C50002D9DC /* QuestionsFactoryImpl.swift */,
 				AB9BB22B2A0E31CC0002D9DC /* StatisticServiceImpl.swift */,
 				AB9BB2202A0D73890002D9DC /* ScreenModelsCreator.swift */,
-				AB4814952A3AF9E200164998 /* ValueCreatorImpRandom.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -297,7 +289,6 @@
 				AB9BB2222A0E150A0002D9DC /* StatisticDataRepository.swift */,
 				AB9BB22D2A0E32810002D9DC /* StatisticServiceProtocol.swift */,
 				ABBD93D42A1F8FBA00DD1BD1 /* AlertPresenterDelegate.swift */,
-				AB4814932A3AF97900164998 /* ValueCreatorProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -540,7 +531,6 @@
 				AB4814862A3AECCC00164998 /* ResponseDataFromServer.swift in Sources */,
 				AB48148A2A3AEF1000164998 /* StubStatisticDataRepository.swift in Sources */,
 				AB48147F2A3A0E0000164998 /* MovieQuizPresenterTest.swift in Sources */,
-				AB4814982A3AFB9900164998 /* StubValueCreator.swift in Sources */,
 				AB4814922A3AF36600164998 /* StubMoviesQuizViewController.swift in Sources */,
 				AB48148E2A3AF1E400164998 /* StubMoviesLoader.swift in Sources */,
 				AB4814832A3AEC0700164998 /* StubNetworkClient.swift in Sources */,
@@ -565,7 +555,6 @@
 				AD5EE5DE284D7887003966EF /* UIColor+Extensions.swift in Sources */,
 				AB407BBB2A04E390006D475A /* QuestionScreenModel.swift in Sources */,
 				AB9BB2182A0D2F4B0002D9DC /* AlertScreenModel.swift in Sources */,
-				AB4814962A3AF9E200164998 /* ValueCreatorImpRandom.swift in Sources */,
 				AD7AFA552836189F00399704 /* Array+Extensions.swift in Sources */,
 				AB9BB22E2A0E32810002D9DC /* StatisticServiceProtocol.swift in Sources */,
 				ABBD93DC2A209FF800DD1BD1 /* NetworkClientProtocol.swift in Sources */,
@@ -576,7 +565,6 @@
 				AB407BC12A04E74F006D475A /* ImageBorderState.swift in Sources */,
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				AB407BBF2A04E6E0006D475A /* Response.swift in Sources */,
-				AB4814942A3AF97900164998 /* ValueCreatorProtocol.swift in Sources */,
 				AB96F4AE2A26214B00E1BDCF /* QuizQuestionModel.swift in Sources */,
 				AB9BB21A2A0D30350002D9DC /* AlertPresenter.swift in Sources */,
 				AB9BB22C2A0E31CC0002D9DC /* StatisticServiceImpl.swift in Sources */,

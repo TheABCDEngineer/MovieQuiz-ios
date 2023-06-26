@@ -12,7 +12,6 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     private let view: MovieQuizViewControllerProtocol
     private let questionFactory: QuestionsFactoryProtocol
     private let statisticService: StatisticServiceProtocol
-    private let valueCreator: ValueCreaterProtocol
     private var questionCounter = 1
     private let totalQuizQuestionsCount = 10
     private var correctResponcesCounter = 0
@@ -22,13 +21,11 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     init(
         viewController: MovieQuizViewControllerProtocol,
         questionFactory: QuestionsFactoryProtocol,
-        statisticService: StatisticServiceProtocol,
-        valueCreator: ValueCreaterProtocol
+        statisticService: StatisticServiceProtocol
     ) {
         self.view = viewController
         self.questionFactory = questionFactory
         self.statisticService = statisticService
-        self.valueCreator = valueCreator
         
         questionFactory.addDelegate(delegate: self)
         questionFactory.prepareFactory()
@@ -87,8 +84,8 @@ class MovieQuizPresenter: QuestionFactoryDelegate, MovieQuizPresenterProtocol {
     
     //MARK: - Private functions
     private func convertToScreenModel(model: QuizQuestionModel) -> QuestionScreenModel {
-        let questionMovieRank = valueCreator.getIntValue()
-        let trueIsMoreThanQustion = valueCreator.getBoolValue()
+        let questionMovieRank = questionFactory.getQuestionMovieRank(from: 5, to: 10)
+        let trueIsMoreThanQustion = questionFactory.getIsMore()
         
         correctResponse = getCorrectResponse(
             trueMovieRank: model.movieRank,

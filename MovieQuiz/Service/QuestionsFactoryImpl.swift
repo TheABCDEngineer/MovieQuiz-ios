@@ -1,6 +1,6 @@
 import Foundation
 
-class QuestionsFactoryImpl: QuestionsFactoryProtocol {
+class QuestionsFactoryImpl {
     private let moviesLoader: MoviesLoaderProtocol
     private let repository: StatisticDataRepository
     private var movies = [MovieModel]()
@@ -15,6 +15,46 @@ class QuestionsFactoryImpl: QuestionsFactoryProtocol {
     ) {
         self.moviesLoader = moviesLoader
         self.repository = repository
+    }
+    
+    private func checkMovieIdIsExpired(_ questionId: String) -> Bool {
+        if !expiredMovies.items.isEmpty {
+            for expiredId in expiredMovies.items {
+                if expiredId == questionId {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    private func convertMovieToQuizQuestionModel (_ model: MovieModel) -> QuizQuestionModel {
+        return QuizQuestionModel(
+            image: createImageDataFromUrl(model.imageUrl),
+            movieRank: model.movieRank
+        )
+    }
+    
+    private func createImageDataFromUrl(_ url: URL?) -> Data {
+        if url == nil {
+            return Data()
+        }
+        var imageData = Data()
+        do {
+            imageData = try Data(contentsOf: url!)
+        } catch {}
+        
+        return imageData
+    }
+}
+
+extension QuestionsFactoryImpl: QuestionsFactoryProtocol {
+    func getQuestionMovieRank(from: Int, to: Int) -> Int {
+        return Int.random(in: from..<to)
+    }
+    
+    func getIsMore() -> Bool {
+        return Bool.random()
     }
     
     func addDelegate(delegate: QuestionFactoryDelegate) {
@@ -71,35 +111,5 @@ class QuestionsFactoryImpl: QuestionsFactoryProtocol {
                 self.delegate?.onNewQuestionGenerated(model: question)
             }
         }
-    }
- 
-    private func checkMovieIdIsExpired(_ questionId: String) -> Bool {
-        if !expiredMovies.items.isEmpty {
-            for expiredId in expiredMovies.items {
-                if expiredId == questionId {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    
-    private func convertMovieToQuizQuestionModel (_ model: MovieModel) -> QuizQuestionModel {
-        return QuizQuestionModel(
-            image: createImageDataFromUrl(model.imageUrl),
-            movieRank: model.movieRank
-        )
-    }
-    
-    private func createImageDataFromUrl(_ url: URL?) -> Data {
-        if url == nil {
-            return Data()
-        }
-        var imageData = Data()
-        do {
-            imageData = try Data(contentsOf: url!)
-        } catch {}
-        
-        return imageData
     }
 }
